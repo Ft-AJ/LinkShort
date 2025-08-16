@@ -36,7 +36,7 @@ export const createURL = async (req, res, next) => {
     if (existingActive) {
       const remainingMs = new Date(existingActive.expiresAt) - now;
       const remainingTimeSeconds = Math.max(0, Math.floor(remainingMs / 1000));
-      const shortURL = `${process.env.BASE_URL}/${existingActive.alias}`;
+      const shortURL = `${req.protocol}://${req.get('host')}/${existingActive.alias}`;
 
       return res.status(200).json({
         success: true,
