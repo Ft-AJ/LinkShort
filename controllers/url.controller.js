@@ -72,7 +72,7 @@ export const createURL = async (req, res, next) => {
       expiresAt,
     });
 
-    const shortURL = `${process.env.BASE_URL}/${alias}`;
+    const shortURL = `${req.protocol}://${req.get('host')}/${alias}`;
 
     res.status(201).json({
       success: true,
