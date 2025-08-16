@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-if (!process.env.MONGO_URI || !process.env.BASE_URL) {
+if (!process.env.MONGO_URI) {
   throw new Error('Missing required environment variables');
 }
 
@@ -43,7 +43,8 @@ const app = express();
 // Your exact existing config endpoint
 app.get('/config.js', (req, res) => {
   res.type('application/javascript');
-  res.send(`window.API_BASE = "${process.env.BASE_URL}";`);
+  const baseURL = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+  res.send(`window.API_BASE = "${baseURL}";`);
 });
 
 app.set('trust proxy', true);
