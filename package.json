@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.7.0",
+    "mongoose": "^8.16.5",
+    "rate-limiter-flexible": "^7.2.0",
+    "serverless-http": "^3.2.0",
+    "validator": "^13.15.15"
+  },
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "A tool that shortens user link and provides an id that is mapped with the original link in the database",
+  "type": "module",
+  "scripts": {
+    "start": "node api/app.js"
+  },
+  "author": "Allam Jakub",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

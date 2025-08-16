@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkShort</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link type="image/png" sizes="120x120" rel="icon" href="/icons8-cutting-96.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-link"></i> LinkShort</h1>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="hero">
+                <h2>Shorten Your URLs</h2>
+                <p>Create short, memorable links that expire in 60 seconds</p>
+            </div>
+
+            <!-- URL Form -->
+            <div class="url-form-container">
+                <form class="url-form" id="urlForm">
+                    <div class="input-group">
+                        <input 
+                            type="url" 
+                            id="originalURL" 
+                            placeholder="Enter your long URL here..." 
+                            required
+                        >
+                        <button type="submit" class="shorten-btn" id="shortenBtn">
+                            <span class="btn-text">Shorten</span>
+                            <span class="spinner" id="spinner"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="advanced-options" id="advancedOptions">
+                        <button type="button" class="toggle-advanced" id="toggleAdvanced">
+                            <i class="fas fa-cog"></i> Advanced Options <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="advanced-content" id="advancedContent">
+                            <div class="option-group">
+                                <label for="customAlias"><i class="fas fa-tag"></i> Custom Alias (optional)</label>
+                                <input 
+                                    type="text" 
+                                    id="customAlias" 
+                                    placeholder="my-custom-link"
+                                    pattern="[A-Za-z0-9_-]{1,32}"
+                                >
+                            </div>
+                            <div class="option-group">
+                                <label for="length"><i class="fas fa-ruler"></i> Random Length</label>
+                                <select id="length">
+                                    <option value="6">6 characters</option>
+                                    <option value="4">4 characters</option>
+                                    <option value="5">5 characters</option>
+                                    <option value="7">7 characters</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Result Display -->
+            <div class="result-container" id="resultContainer">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3><i class="fas fa-check-circle"></i> Your Shortened URL</h3>
+                        <div class="timer-display">
+                            <div class="timer" id="timer">
+                                <i class="fas fa-hourglass-half timer-icon"></i>
+                                <span id="timerText">60s</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="url-display">
+                        <div class="url-item">
+                            <label>Short URL:</label>
+                            <div class="short-url-container">
+                                <a href="#" id="shortUrlResult" target="_blank" rel="noopener"></a>
+                                <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="create-another-btn" id="createAnotherBtn">
+                        <i class="fas fa-plus"></i> Create Another
+                    </button>
+                </div>
+            </div>
+
+            <!-- Duplicate Link Info -->
+            <div class="info-container" id="infoContainer">
+                <div class="info-card">
+                    <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+                    <div class="info-content">
+                        <h4 class="info-title" id="infoTitle"></h4>
+                        <p class="info-message" id="infoMessage"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-container" id="errorContainer">
+                <div class="error-card">
+                    <span class="error-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <span class="error-message" id="errorMessage"></span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="social-links">
+                <a href="https://linkedin.com/in/allmjkb21" target="_blank" class="social-link linkedin" title="Connect on LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/Ft-AJ" target="_blank" class="social-link github" title="View on GitHub">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <p>&copy; 2025 LinkShort. Built with ❤️ by <strong>Allam Jakub</strong></p>
+        </footer>
+    </div>
+
+    <!-- Copy Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check"></i>
+        <span>Copied to clipboard!</span>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
