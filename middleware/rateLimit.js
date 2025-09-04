@@ -20,13 +20,13 @@ function buildLimiter({ keyPrefix, points, duration }) {
 // Rate limiter configurations
 const createLimiter = buildLimiter({
   keyPrefix: 'rl:create',
-  points: 20,
+  points: 50,
   duration: 60,
 });
 
 const redirectLimiter = buildLimiter({
   keyPrefix: 'rl:redirect',
-  points: 600,
+  points: 1000,
   duration: 60,
 });
 
@@ -34,8 +34,12 @@ const redirectLimiter = buildLimiter({
 function rateLimitMw(rl) {
   return async (req, res, next) => {
     // If no rate limiter (Redis unavailable), skip rate limiting
-    if (!rl) {
-      console.warn('Rate limiting skipped: Redis not available');
+    if (!rl || process.env.NODE_ENV !== 'production') {
+      if (!rl) {
+        console.warn('Rate limiting skipped: Redis not available');
+      } else {
+        console.info('Rate limiting skipped: Not in production');
+      }
       return next();
     }
 
