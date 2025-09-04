@@ -6,7 +6,7 @@ import User from '../models/user.model.js';
 export const getURL = async (req, res, next) => {
   try {
     const user = req.urlData;
-    const shortURL = `${req.headers.origin}/${user.alias}`;
+    const shortURL = `${req.protocol}://${req.get('host')}/${user.alias}`;    
     
     return res.status(200).json({
       success: true,
