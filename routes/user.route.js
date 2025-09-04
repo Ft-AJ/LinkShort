@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/info/:id', linkExpiration, getURL);
 
 // Create a new short URL
-router.post('/', rateLimitCreate, validateURL, createURL);
+router.post('/', validateURL, createURL);
 
 // Redirect to original URL
 router.get('/:alias', rateLimitRedirect, linkExpiration, getRedirect);
