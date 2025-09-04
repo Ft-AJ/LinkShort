@@ -6,6 +6,10 @@ import User from '../models/user.model.js';
 export const getURL = async (req, res, next) => {
   try {
     const user = req.urlData;
+    if (!req.urlData) {
+      return res.status(404).json({ success: false, message: 'URL not found' });
+    }
+    
     const shortURL = `${req.protocol}://${req.get('host')}/${user.alias}`;    
     
     return res.status(200).json({
