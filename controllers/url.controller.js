@@ -6,8 +6,8 @@ import User from '../models/user.model.js';
 export const getURL = async (req, res, next) => {
   try {
     const user = req.urlData;
-    const shortURL = `${process.env.BASE_URL}/${user.alias}`;
-
+    const shortURL = `${req.headers.origin}/${user.alias}`;
+    
     return res.status(200).json({
       success: true,
       originalURL: user.originalURL,
