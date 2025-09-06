@@ -16,9 +16,7 @@
   "scripts": {
     "start": "node api/app.js",
     "dev": "NODE_ENV=development node api/app.js",
-    "dev:watch": "NODE_ENV=development nodemon api/app.js",
-    "test:local": "NODE_ENV=development node api/app.js",
-    "build": "echo 'No build step required'"
+    "dev:watch": "NODE_ENV=development nodemon api/app.js"
   },
   "author": "Allam Jakub",
   "license": "ISC",
