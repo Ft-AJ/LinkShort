@@ -5,13 +5,17 @@ import { rateLimitCreate, rateLimitRedirect } from '../middleware/rateLimit.js';
 
 const router = express.Router();
 
-// Get info about a short URL
+// Health check - GET /api/ping
+router.get('/ping', (req, res) => res.send('pong'));
+
+// Create a new short URL - POST /api/
+router.post('/', rateLimitCreate, validateURL, createURL);
+
+// Get info about a short URL - GET /api/info/:id
 router.get('/info/:id', linkExpiration, getURL);
 
-// Create a new short URL
-router.post('/', validateURL, createURL);
-
-// Redirect to original URL
+// Redirect to original URL - GET /api/:alias
+// NOTE: This must be last to avoid intercepting other routes
 router.get('/:alias', rateLimitRedirect, linkExpiration, getRedirect);
 
 export default router;

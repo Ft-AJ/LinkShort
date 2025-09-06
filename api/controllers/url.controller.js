@@ -2,19 +2,22 @@ import mongoose from 'mongoose';
 import Token from '../services/token.js';
 import User from '../models/user.model.js';
 
-// GET: Return URL details
+/**
+ * GET /info/:id
+ * Return URL details (if not expired)
+ */
 export const getURL = async (req, res, next) => {
   try {
-    const user = req.urlData;
+    const user = req.urlData; // set by linkExpiration middleware
     if (!user) {
       return res.status(404).json({ 
         success: false, 
-        message: 'URL not found' 
+        message: 'URL not found or expired' 
       });
     }
-    
+
     const shortURL = `${req.protocol}://${req.get('host')}/${user.alias}`;    
-    
+
     return res.status(200).json({
       success: true,
       originalURL: user.originalURL,
@@ -23,21 +26,28 @@ export const getURL = async (req, res, next) => {
       remainingTimeSeconds: req.remainingTimeSeconds || 0,
     });
   } catch (err) {
-    console.error(err);
+    console.error('getURL error:', err);
     next(err);
   }
 };
 
-// POST: Create a shortened URL
+
+/**
+ * POST /
+ * Create a shortened URL (1 min expiry by default)
+ */
 export const createURL = async (req, res, next) => {
   try {
     const { originalURL, custom_alias, length } = req.body;
+    if (!originalURL) {
+      return res.status(400).json({ success: false, message: 'Original URL is required' });
+    }
 
-    // 1) If an unexpired short link for the same originalURL already exists,
-    //    return it with remaining time instead of erroring.
     const now = new Date();
+
+    // 1) If unexpired short link exists → return it
     const existingActive = await User.findOne({
-      originalURL: originalURL?.trim(),
+      originalURL: originalURL.trim(),
       expiresAt: { $gt: now },
     }).lean();
 
@@ -56,22 +66,23 @@ export const createURL = async (req, res, next) => {
       });
     }
 
-    // 2) Use custom alias or generate a token
+    // 2) Generate or use custom alias
     let alias = custom_alias || Token(
       typeof length === 'number'
         ? Math.max(1, Math.min(7, length))
         : 6
     );
 
-    // 3) Check if alias already exists (still enforce alias uniqueness)
+    // 3) Check alias uniqueness
     const existingToken = await User.findOne({ alias });
     if (existingToken) {
-      const err = new Error('Alias already exists!');
-      err.statusCode = 409;
-      throw err;
+      return res.status(409).json({
+        success: false,
+        message: 'Alias already exists!',
+      });
     }
 
-    // 4) Create new short link (keep your 1-minute expiry)
+    // 4) Create new short link (1 min expiry)
     const expiresAt = new Date(Date.now() + 60 * 1000);
 
     const newURLDoc = await User.create({
@@ -82,27 +93,31 @@ export const createURL = async (req, res, next) => {
 
     const shortURL = `${req.protocol}://${req.get('host')}/${alias}`;
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: 'Link added successfully',
       newURL: shortURL,
       data: newURLDoc,
     });
   } catch (err) {
-    // Handle duplicate alias error
-    if (err?.code === 11000 && err?.keyPattern?.alias) {
-      err.statusCode = 409;
-      err.message = 'Alias already exists!';
-    }
+    console.error('createURL error:', err);
     next(err);
   }
 };
 
 
-// GET: Redirect to original URL
+/**
+ * GET /:alias
+ * Redirect to original URL if active
+ */
 export const getRedirect = (req, res) => {
-  const user = req.urlData;
+  const user = req.urlData; // set by linkExpiration middleware
 
+  if (!user) {
+    return res.status(404).send('Link expired or not found');
+  }
+
+  // Disable caching for security
   res.set({
     'Cache-Control': 'no-store',
     'Referrer-Policy': 'no-referrer',

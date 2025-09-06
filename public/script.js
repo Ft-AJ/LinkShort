@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE = window.API_BASE;
+const API_BASE = 'http://localhost:5000';
 
 // DOM Elements
 const themeToggle = document.getElementById('themeToggle');
